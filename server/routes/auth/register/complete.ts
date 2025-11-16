@@ -19,6 +19,13 @@ const completeSchema = z.object({
 });
 
 export default defineEventHandler(async event => {
+  if (event.req.method !== 'POST') {
+    throw createError({
+      statusCode: 405,
+      statusMessage: 'HTTP method is not allowed.',
+      message: 'Only POST method is allowed for this endpoint.',
+    });
+  }
   const body = await readBody(event);
 
   const result = completeSchema.safeParse(body);
